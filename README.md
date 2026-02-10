@@ -1,124 +1,104 @@
-🌿 StudySmart AI
-A Smarter Way to Plan, Learn, and Stay Consistent
-Because studying is not just about time — it’s about confidence, focus, and behavior.
+📘 StudySmart AI
+   An Adaptive, Confidence-Based Study Planner with Peer Learning Support
 
-🧩 The Idea Behind StudySmart AI
-Students often fail not because they don’t study,
-but because they don’t know what to study, when to study, and how much to study.
+🚀 Overview
+   StudySmart AI is a smart web application designed to help students plan their studies effectively based on their confidence level in each subject.
+Unlike traditional fixed timetables, this system dynamically allocates study hours, generates personalized tips, and encourages peer accountability to improve consistency and performance.
 
-Most planners:
-Treat all subjects equally
-Ignore weak areas
-Don’t adapt over time
-Don’t support collaboration
-StudySmart AI rethinks study planning by combining confidence-based logic, adaptive scheduling, and peer accountability into one simple system.
+🎯 Problem Statement
 
-🎯 What This Project Does
+Most students struggle with:
+Fixed study schedules that ignore weak subjects
+Poor time allocation across subjects
+Lack of motivation and peer accountability
+Last-minute stress and burnout
+Traditional planners fail to adapt to individual learning needs.
 
-StudySmart AI is an AI-inspired study planning web application that helps students:
-Understand their weak and strong subjects
-Automatically generate a realistic weekly timetable
-Receive daily study guidance
-Invite friends and study together
-Maintain consistency without burnout
-This is not just a timetable generator — it is a learning support system.
+💡 Solution
 
-🧠 Core Concepts Used
-🔹 Confidence-Based Intelligence
-Students assign confidence levels to subjects.
+StudySmart AI solves this by:
+Collecting subject-wise confidence levels
+Automatically allocating study hours
+Generating a weekly adaptive timetable
+Providing smart study tips
+Enabling peer learning through invitations
 
-The system uses this input to:
-Allocate more time to weak subjects
-Reduce unnecessary time on strong subjects
-Balance workload across the week
+⚙️ Key Features
 
-🔹 Adaptive Weekly Planner
+🧠 Adaptive Study Planning
+  Weak subjects receive more study hours
+  Strong subjects receive lighter revision
+  Balanced workload across the week
 
-The timetable is:
-Automatically generated
-Distributed evenly
-Designed to reduce cognitive overload
+📅 Weekly Timetable Generator
 
-🔹 Behavioral Study Guidance
+Automatically generated based on confidence levels
+Even distribution across all days
 
-Instead of generic motivation:
-The system gives actionable tips
-Suggestions change based on confidence
-Focus is on what to do today
+💡 Smart Study Tips
 
-🔹 Peer Accountability System
-
-Students can:
-Invite friends via email-based invite links
-Accept invitations and access the planner
-Create a healthy, collaborative study environment
-
-(Email delivery is designed as a future extension for security and scalability.)
-
-🖥️ Application Pages
-Page	Purpose
-Home	Problem explanation, system overview, and user profile
-Planner	Subject input, adaptive timetable, smart study tips
-Peers	Invite friends, accept invitations, view connected peers
-🏗️ System Flow
-Student Inputs (Subjects + Confidence)
-        ↓
-Intelligence Logic Engine
-        ↓
-Weekly Timetable Generator
-        ↓
-Smart Study Suggestions
-        ↓
-Peer Collaboration
+Personalized tips for each subject
+Focuses on revision, practice, and deep learning
+👤 Student Profile
+Simple profile creation
+Personalized study experience
+🤝 Peer Learning System
+Invite friends using email links
+Join study groups
+Motivation through shared learning
 
 🛠️ Technology Stack
 
+Frontend: HTML, CSS
 Backend: Python (Flask)
+Templating: Jinja2
+Architecture: Single-file Flask application
 
-Frontend: HTML & CSS (Teal-blue modern UI)
+🧩 Study Strategy Logic
 
-Logic Layer: Rule-based intelligence
+Confidence Level	Focus Type	Study Hours
+1–2	High Focus	3 hours
+3	Medium Focus	2 hours
+4–5	Low Focus	1 hour
 
-Architecture: Single-file prototype (easy to deploy & demo)
+🔄 How It Works
 
-▶️ How to Run
-Step 1: Install Flask
+User logs in and creates a profile
+Subjects are added with confidence levels
+System assigns study hours automatically
+Weekly timetable is generated
+Smart study tips guide daily focus
+Peers can be invited for accountability
+
+📌 Use Cases
+
+First-year engineering students
+Exam preparation
+Self-study planning
+Peer-based learning groups
+
+▶️ How to Run the Project
+
 pip install flask
+python app.py
 
-Step 2: Run the Application
-python studysmart_ai_invite_final.py
+Open browser and go to:
 
-Step 3: Open in Browser
-http://127.0.0.1:5000
+http://127.0.0.1:5000/
 
-🧪 Demo Walkthrough (For Judges)
+🌱 Future Enhancements
 
-Save student profile on Home page
-Add subjects with confidence levels
-View auto-generated weekly timetable
-Read daily smart study suggestions
-Invite a friend using email
-Open invite link in a new tab and accept
-Planner access is granted
+User authentication with database
+Progress tracking & analytics
+AI-based performance prediction
+Mobile-friendly UI
+Notification & reminder system
 
-🔮 Future Scope
-
-Real email integration (SMTP / OAuth)
-AI/ML-based learning pattern analysis
-Progress tracking & analytics dashboard
-Multi-user cloud database
-Mobile application
-
-🌟 Why This Project Matters
-
-Addresses a real student pain point
-Focuses on practical usability
-Encourages healthy study behavior
-Demonstrates system-level thinking
-Designed as a product prototype, not just a demo
-
-👩‍💻 Creator
+👩‍💻 Author
 
 Bhargavi
-Designed & Developed with a focus on learning efficiency
-2026
+Designed & Developed with ❤️
+
+⭐ Final Note
+
+StudySmart AI focuses on learning smarter, not harder by adapting to individual student needs and promoting consistent study habits.
