@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySmart AI - Intelligent Study Planner</title>
+    <style>
+        :root {
+            --primary-color: #0B4F5C;
+            --primary-dark: #082E37;
+            --primary-light: #158BA0;
+            --secondary-color: #1E7A8F;
+            --background-color: #E8F4F8;
+            --card-bg: #FFFFFF;
+            --text-dark: #1A3A42;
+            --text-light: #5A7C88;
+            --border-color: #B8D8E0;
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --danger-color: #E74C3C;
+            --gold-color: #FFD700;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(11, 79, 92, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            border-bottom-color: #20B2AA;
+        }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #C0392B;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            max-width: 500px;
+            margin: 5rem auto;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 5px 20px rgba(11, 79, 92, 0.1);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--text-light);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            color: var(--text-dark);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(11, 79, 92, 0.1);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 79, 92, 0.3);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .auth-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        /* Page Container */
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 79, 92, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+        }
+
+        .btn-success:hover {
+            background-color: #229954;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 20px rgba(11, 79, 92, 0.1);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(11, 79, 92, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Progress Bars */
+        .progress-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--background-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary-color));
+            transition: width 0.5s ease;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-gold {
+            background-color: var(--gold-color);
+            color: #333;
+        }
+
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .badge-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Note Item */
+        .note-item {
+            background-color: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .note-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Timetable */
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background-color: var(--card-bg);
+        }
+
+        .timetable th,
+        .timetable td {
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .timetable th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .timetable tr:hover {
+            background-color: var(--background-color);
+        }
+
+        .session-tag {
+            display: inline-block;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: white;
+            margin: 0.25rem;
+        }
+
+        .session-high {
+            background-color: var(--success-color);
+        }
+
+        .session-medium {
+            background-color: var(--warning-color);
+        }
+
+        .session-low {
+            background-color: var(--danger-color);
+        }
+
+        /* Timer */
+        .timer-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <!-- LOGIN PAGE -->
+        <div id="loginPage" class="page-container active">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>🧠 StudySmart AI</h1>
+                    <p>Login to your account</p>
+                </div>
+
+                <div class="alert" id="loginAlert"></div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" required placeholder="Enter your username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+
+                <div class="auth-link">
+                    Don't have an account? <a onclick="switchPage('registerPage')">Register here</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGISTER PAGE -->
+        <div id="registerPage" class="page-container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>🧠 StudySmart AI</h1>
+                    <p>Create a new account</p>
+                </div>
+
+                <div class="alert" id="registerAlert"></div>
+
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="regUsername">Username</label>
+                        <input type="text" id="regUsername" required placeholder="Choose a username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" required placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" required placeholder="Create a password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regConfirmPassword">Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" required placeholder="Confirm your password">
+                    </div>
+
+                    <button type="submit" class="btn-submit">Register</button>
+                </form>
+
+                <div class="auth-link">
+                    Already have an account? <a onclick="switchPage('loginPage')">Login here</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboardPage" class="page-container">
+            <!-- Navigation -->
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="logo" onclick="showDashboardPage('dashboard')">
+                        <span>🧠</span>
+                        <span>StudySmart AI</span>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a class="nav-link active" onclick="showDashboardPage('dashboard')">Dashboard</a></li>
+                        <li><a class="nav-link" onclick="showDashboardPage('timetable')">Timetable</a></li>
+                        <li><a class="nav-link" onclick="showDashboardPage('focus')">Focus Timer</a></li>
+                        <li><a class="nav-link" onclick="showDashboardPage('notes')">Notes</a></li>
+                        <li><a class="nav-link" onclick="showDashboardPage('analytics')">Analytics</a></li>
+                        <li><a class="nav-link" onclick="showDashboardPage('collaboration')">Collaboration</a></li>
+                    </ul>
+                    <div class="user-info">
+                        <span id="userName">Student</span>
+                        <span id="userLevel">🌟 Level 1</span>
+                        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div id="dashboardContent">
+                <div class="page-header">
+                    <h1>Welcome to StudySmart AI 🎓</h1>
+                    <p>Your intelligent study companion for adaptive learning</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="stat-card">
+                        <div class="stat-value" id="hoursStudied">0</div>
+                        <div class="stat-label">Hours Studied</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="streakDays">0</div>
+                        <div class="stat-label">Day Streak 🔥</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="tasksCompleted">0</div>
+                        <div class="stat-label">Tasks Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="userPoints">0</div>
+                        <div class="stat-label">Points Earned</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <div class="card">
+                        <h2>📊 Quick Actions</h2>
+                        <div class="grid-3">
+                            <button class="btn-primary" onclick="showDashboardPage('focus')" style="padding: 1.5rem;">⏱️ Start Focus Session</button>
+                            <button class="btn-primary" onclick="showDashboardPage('notes')" style="padding: 1.5rem;">📝 Add Study Notes</button>
+                            <button class="btn-primary" onclick="showDashboardPage('timetable')" style="padding: 1.5rem;">📅 View Timetable</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <div class="card">
+                        <h2>✨ Features</h2>
+                        <div class="grid-3">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">⏱️</div>
+                                <h3>Focus Timer</h3>
+                                <p>Pomodoro-based timer with confidence tracking</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📝</div>
+                                <h3>Study Notes</h3>
+                                <p>Organize notes by subject and confidence</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📈</div>
+                                <h3>Analytics</h3>
+                                <p>Track progress and identify weak areas</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">👥</div>
+                                <h3>Peer Collaboration</h3>
+                                <p>Connect with peers and study together</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📅</div>
+                                <h3>Adaptive Timetable</h3>
+                                <p>AI-generated schedules based on confidence</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🤖</div>
+                                <h3>AI Suggestions</h3>
+                                <p>Smart study recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIMETABLE CONTENT -->
+            <div id="timetableContent" style="display: none;">
+                <div class="page-header">
+                    <h1>Adaptive Weekly Timetable 📅</h1>
+                    <p>AI-generated schedule based on your confidence levels</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn-primary" onclick="generateTimetable()">🔄 Generate New Timetable</button>
+                    <button class="btn-secondary" onclick="document.getElementById('confidenceModal').classList.add('active')" style="margin-left: 1rem;">⚙️ Set Confidence Levels</button>
+                </div>
+
+                <div class="card">
+                    <h2>This Week's Schedule</h2>
+                    <div style="overflow-x: auto;">
+                        <table class="timetable">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                    <th>Saturday</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timetableBody">
+                                <tr>
+                                    <td>09:00-10:00</td>
+                                    <td colspan="6" style="text-align: center; color: var(--text-light);">Click "Generate New Timetable" to create your schedule</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOCUS TIMER CONTENT -->
+            <div id="focusContent" style="display: none;">
+                <div class="page-header">
+                    <h1>Focus Timer ⏱️</h1>
+                    <p>Pomodoro-based study sessions with confidence tracking</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h2>Study Session Timer</h2>
+                        <div class="timer-display" id="timerDisplay">25:00</div>
+                        <div class="timer-controls">
+                            <button class="btn-primary" onclick="startTimer()">Start</button>
+                            <button class="btn-secondary" onclick="pauseTimer()">Pause</button>
+                            <button class="btn-secondary" onclick="resetTimer()">Reset</button>
+                        </div>
+                        <div class="form-group">
+                            <label>Session Duration (minutes)</label>
+                            <input type="number" id="sessionDuration" value="25" min="1" max="120">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Confidence Level</h2>
+                        <div style="margin-top: 2rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                                    <input type="radio" name="confidence" value="high"> 
+                                    <span class="session-tag session-high">High Confidence ✅</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                                    <input type="radio" name="confidence" value="medium" checked> 
+                                    <span class="session-tag session-medium">Medium Confidence ⚠️</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 2rem;">
+                                <label style="display: flex; align-items: center; gap: 1rem; cursor: pointer;">
+                                    <input type="radio" name="confidence" value="low"> 
+                                    <span class="session-tag session-low">Low Confidence ❌</span>
+                                </label>
+                            </div>
+                            <button class="btn-success" onclick="completeSession()">Complete Session 🎉</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <h2>Today's Sessions</h2>
+                    <div id="sessionsList">
+                        <p style="color: var(--text-light);">No sessions completed yet today</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOTES CONTENT -->
+            <div id="notesContent" style="display: none;">
+                <div class="page-header">
+                    <h1>Study Notes 📝</h1>
+                    <p>Organize and manage your study notes</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn-primary" onclick="document.getElementById('noteModal').classList.add('active')">+ Add New Note</button>
+                </div>
+
+                <div class="card">
+                    <h2>Your Notes</h2>
+                    <div id="notesList">
+                        <p style="color: var(--text-light);">No notes yet. Create your first note!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS CONTENT -->
+            <div id="analyticsContent" style="display: none;">
+                <div class="page-header">
+                    <h1>Analytics 📈</h1>
+                    <p>Track your learning progress and patterns</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h2>Confidence Distribution</h2>
+                        <div id="confidenceStats">
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>High Confidence</span>
+                                    <span id="highConfPercent">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="highConfBar" style="width: 0%; background-color: var(--success-color);"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>Medium Confidence</span>
+                                    <span id="medConfPercent">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="medConfBar" style="width: 0%; background-color: var(--warning-color);"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>Low Confidence</span>
+                                    <span id="lowConfPercent">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="lowConfBar" style="width: 0%; background-color: var(--danger-color);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Your Statistics</h2>
+                        <div style="padding: 1rem 0;">
+                            <p><strong>Total Sessions:</strong> <span id="totalSessions">0</span></p>
+                            <p><strong>Total Hours:</strong> <span id="totalHours">0</span></p>
+                            <p><strong>Current Level:</strong> <span id="currentLevel">1</span></p>
+                            <p><strong>Points Earned:</strong> <span id="pointsEarned">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLLABORATION CONTENT -->
+            <div id="collaborationContent" style="display: none;">
+                <div class="page-header">
+                    <h1>Peer Collaboration 👥</h1>
+                    <p>Connect with peers and study together</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn-primary" onclick="document.getElementById('inviteModal').classList.add('active')">📧 Send Invite</button>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h2>Connected Peers</h2>
+                        <div id="peersList">
+                            <p style="color: var(--text-light);">No peers connected yet</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Pending Invites</h2>
+                        <div id="invitesList">
+                            <p style="color: var(--text-light);">No pending invites</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODALS -->
+    <!-- Confidence Modal -->
+    <div id="confidenceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('confidenceModal').classList.remove('active')">&times;</span>
+            <div class="modal-header">Set Confidence Levels 📊</div>
+            <form onsubmit="saveConfidenceLevels(event)">
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" id="confSubject" required placeholder="e.g., Mathematics">
+                </div>
+                <div class="form-group">
+                    <label>Confidence Level</label>
+                    <select id="confLevel" required>
+                        <option value="high">High ✅</option>
+                        <option value="medium">Medium ⚠️</option>
+                        <option value="low">Low ❌</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('noteModal').classList.remove('active')">&times;</span>
+            <div class="modal-header">Add Study Note 📝</div>
+            <form onsubmit="addNote(event)">
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" id="noteSubject" required placeholder="e.g., Mathematics">
+                </div>
+                <div class="form-group">
+                    <label>Note Content</label>
+                    <textarea id="noteContent" rows="5" required placeholder="Enter your study notes..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Confidence Level</label>
+                    <select id="noteConfidence" required>
+                        <option value="high">High ✅</option>
+                        <option value="medium">Medium ⚠️</option>
+                        <option value="low">Low ❌</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Save Note</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('inviteModal').classList.remove('active')">&times;</span>
+            <div class="modal-header">Send Study Invite 📧</div>
+            <form onsubmit="sendInvite(event)">
+                <div class="form-group">
+                    <label>Peer Username</label>
+                    <input type="text" id="peerUsername" required placeholder="Enter peer's username">
+                </div>
+                <div class="form-group">
+                    <label>Peer Email</label>
+                    <input type="email" id="peerEmail" required placeholder="Enter peer's email">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="inviteMessage" rows="4" placeholder="Let them know why you want to study together..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Send Invite</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 StudySmart AI - Intelligent Study Planner | Made with ❤️ for Students</p>
+    </footer>
+
+    <script>
+        // Data Storage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let appData = JSON.parse(localStorage.getItem('appData')) || {
+            notes: [],
+            sessions: [],
+            peers: [],
+            confidenceLevels: []
+        };
+
+        // Switch Auth Page
+        function switchPage(page) {
+            document.querySelectorAll('.page-container').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(page).classList.add('active');
+        }
+
+        // Show Dashboard Page
+        function showDashboardPage(pageType) {
+            document.querySelectorAll('[id$="Content"]').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            if (pageType === 'dashboard') {
+                document.getElementById('dashboardContent').style.display = 'block';
+            } else if (pageType === 'timetable') {
+                document.getElementById('timetableContent').style.display = 'block';
+            } else if (pageType === 'focus') {
+                document.getElementById('focusContent').style.display = 'block';
+            } else if (pageType === 'notes') {
+                document.getElementById('notesContent').style.display = 'block';
+                displayNotes();
+            } else if (pageType === 'analytics') {
+                document.getElementById('analyticsContent').style.display = 'block';
+                updateAnalytics();
+            } else if (pageType === 'collaboration') {
+                document.getElementById('collaborationContent').style.display = 'block';
+                displayPeers();
+            }
+
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(el => {
+                el.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showAlert('loginAlert', '✅ Login successful!', 'success');
+                setTimeout(() => {
+                    switchPage('dashboardPage');
+                    loadUserProfile();
+                }, 1000);
+            } else {
+                showAlert('loginAlert', '❌ Invalid username or password', 'error');
+            }
+        }
+
+        // Handle Register
+        function handleRegister(event) {
+            event.preventDefault();
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAlert('registerAlert', '❌ Passwords do not match', 'error');
+                return;
+            }
+
+            if (users.find(u => u.username === username)) {
+                showAlert('registerAlert', '❌ Username already exists', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                username,
+                email,
+                password,
+                level: 1,
+                points: 0,
+                hoursStudied: 0
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            showAlert('registerAlert', '✅ Registration successful! Please login.', 'success');
+
+            setTimeout(() => {
+                switchPage('loginPage');
+                document.getElementById('loginForm').reset();
+            }, 1500);
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            currentUser = null;
+            localStorage.setItem('currentUser', JSON.stringify(null));
+            switchPage('loginPage');
+            document.getElementById('loginForm').reset();
+            document.getElementById('registerForm').reset();
+        }
+
+        // Load User Profile
+        function loadUserProfile() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.username;
+                document.getElementById('userLevel').textContent = `🌟 Level ${currentUser.level}`;
+                document.getElementById('hoursStudied').textContent = currentUser.hoursStudied.toFixed(1);
+                document.getElementById('userPoints').textContent = currentUser.points;
+            }
+        }
+
+        // Show Alert
+        function showAlert(elementId, message, type) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.className = `alert ${type} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 4000);
+        }
+
+        // Generate Timetable
+        function generateTimetable() {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const subjects = ['Mathematics', 'Science', 'English', 'History', 'Programming'];
+            const times = ['09:00-10:00', '10:00-11:00', '11:00-12:00', '14:00-15:00', '15:00-16:00'];
+            const confLevels = ['high', 'medium', 'low'];
+
+            let html = '';
+            times.forEach(time => {
+                html += `<tr><td><strong>${time}</strong></td>`;
+                days.forEach(day => {
+                    const subject = subjects[Math.floor(Math.random() * subjects.length)];
+                    const conf = confLevels[Math.floor(Math.random() * confLevels.length)];
+                    const confEmoji = conf === 'high' ? '✅' : conf === 'medium' ? '⚠️' : '❌';
+                    html += `<td><span class="session-tag session-${conf}">${subject} ${confEmoji}</span></td>`;
+                });
+                html += '</tr>';
+            });
+
+            document.getElementById('timetableBody').innerHTML = html;
+            alert('✅ New adaptive timetable generated!');
+        }
+
+        // Focus Timer
+        let timerInterval = null;
+        let timeRemaining = 1500;
+
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining === 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    alert('🎉 Session complete! How was your confidence level?');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timeRemaining = parseInt(document.getElementById('sessionDuration').value) * 60;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerDisplay').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function completeSession() {
+            const confidence = document.querySelector('input[name="confidence"]:checked').value;
+
+            const session = {
+                id: Date.now(),
+                subject: 'General Study',
+                duration: parseInt(document.getElementById('sessionDuration').value),
+                confidence: confidence,
+                date: new Date().toISOString()
+            };
+
+            appData.sessions.push(session);
+            currentUser.hoursStudied += session.duration / 60;
+            currentUser.points += confidence === 'high' ? 20 : confidence === 'medium' ? 10 : 5;
+            currentUser.level = Math.floor(currentUser.points / 100) + 1;
+
+            localStorage.setItem('appData', JSON.stringify(appData));
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            localStorage.setItem('users', JSON.stringify(users.map(u => u.id === currentUser.id ? currentUser : u)));
+
+            alert('🎉 Session recorded! Great work!');
+            loadUserProfile();
+            resetTimer();
+        }
+
+        // Notes Functions
+        function addNote(event) {
+            event.preventDefault();
+            const subject = document.getElementById('noteSubject').value;
+            const content = document.getElementById('noteContent').value;
+            const confidence = document.getElementById('noteConfidence').value;
+
+            const note = {
+                id: Date.now(),
+                subject,
+                content,
+                confidence,
+                date: new Date().toLocaleDateString()
+            };
+
+            appData.notes.push(note);
+            localStorage.setItem('appData', JSON.stringify(appData));
+            displayNotes();
+
+            document.getElementById('noteModal').classList.remove('active');
+            event.target.reset();
+            alert('✅ Note saved successfully!');
+        }
+
+        function displayNotes() {
+            const list = document.getElementById('notesList');
+            if (appData.notes.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-light);">No notes yet. Create your first note!</p>';
+                return;
+            }
+
+            list.innerHTML = appData.notes.map(note => `
+                <div class="note-item">
+                    <div class="note-title">${note.subject}</div>
+                    <p>${note.content}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                        <span class="badge badge-${note.confidence === 'high' ? 'success' : note.confidence === 'medium' ? 'primary' : 'danger'}">${note.confidence.toUpperCase()}</span>
+                        <span class="note-date">${note.date}</span>
+                        <button class="btn-secondary" onclick="deleteNote(${note.id})" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteNote(id) {
+            appData.notes = appData.notes.filter(n => n.id !== id);
+            localStorage.setItem('appData', JSON.stringify(appData));
+            displayNotes();
+        }
+
+        // Confidence Levels
+        function saveConfidenceLevels(event) {
+            event.preventDefault();
+            const subject = document.getElementById('confSubject').value;
+            const level = document.getElementById('confLevel').value;
+
+            appData.confidenceLevels.push({ subject, level, date: new Date().toISOString() });
+            localStorage.setItem('appData', JSON.stringify(appData));
+
+            document.getElementById('confidenceModal').classList.remove('active');
+            alert(`✅ Confidence level for ${subject} set to ${level}!`);
+            generateTimetable();
+            event.target.reset();
+        }
+
+        // Analytics
+        function updateAnalytics() {
+            const highConf = appData.sessions.filter(s => s.confidence === 'high').length;
+            const medConf = appData.sessions.filter(s => s.confidence === 'medium').length;
+            const lowConf = appData.sessions.filter(s => s.confidence === 'low').length;
+            const total = highConf + medConf + lowConf;
+
+            if (total > 0) {
+                const highPercent = Math.round((highConf / total) * 100);
+                const medPercent = Math.round((medConf / total) * 100);
+                const lowPercent = Math.round((lowConf / total) * 100);
+
+                document.getElementById('highConfPercent').textContent = highPercent + '%';
+                document.getElementById('medConfPercent').textContent = medPercent + '%';
+                document.getElementById('lowConfPercent').textContent = lowPercent + '%';
+
+                document.getElementById('highConfBar').style.width = highPercent + '%';
+                document.getElementById('medConfBar').style.width = medPercent + '%';
+                document.getElementById('lowConfBar').style.width = lowPercent + '%';
+            }
+
+            const totalHours = appData.sessions.reduce((sum, s) => sum + (s.duration / 60), 0);
+            document.getElementById('totalSessions').textContent = total;
+            document.getElementById('totalHours').textContent = totalHours.toFixed(1);
+            document.getElementById('currentLevel').textContent = currentUser.level;
+            document.getElementById('pointsEarned').textContent = currentUser.points;
+        }
+
+        // Collaboration
+        function sendInvite(event) {
+            event.preventDefault();
+            const peerUsername = document.getElementById('peerUsername').value;
+            const peerEmail = document.getElementById('peerEmail').value;
+            const message = document.getElementById('inviteMessage').value;
+
+            const peer = {
+                id: Date.now(),
+                username: peerUsername,
+                email: peerEmail,
+                message,
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+
+            appData.peers.push(peer);
+            localStorage.setItem('appData', JSON.stringify(appData));
+
+            document.getElementById('inviteModal').classList.remove('active');
+            alert(`📧 Invite sent to ${peerEmail}!`);
+            event.target.reset();
+            displayPeers();
+        }
+
+        function displayPeers() {
+            let peersHtml = '';
+            const acceptedPeers = appData.peers.filter(p => p.status === 'accepted');
+
+            if (acceptedPeers.length === 0) {
+                peersHtml = '<p style="color: var(--text-light);">No peers connected yet</p>';
+            } else {
+                peersHtml = acceptedPeers.map(peer => `
+                    <div style="background: var(--background-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <p><strong>${peer.username}</strong></p>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">${peer.email}</p>
+                        <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Message</button>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('peersList').innerHTML = peersHtml;
+
+            let invitesHtml = '';
+            const pendingInvites = appData.peers.filter(p => p.status === 'pending');
+
+            if (pendingInvites.length === 0) {
+                invitesHtml = '<p style="color: var(--text-light);">No pending invites</p>';
+            } else {
+                invitesHtml = pendingInvites.map(inv => `
+                    <div style="background: var(--background-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <p><strong>${inv.username}</strong> sent you an invite</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light);">${inv.message || 'No message'}</p>
+                        <button class="btn-success" onclick="acceptPeer(${inv.id})" style="padding: 0.5rem 1rem; font-size: 0.85rem; margin-right: 0.5rem;">Accept</button>
+                        <button class="btn-secondary" onclick="rejectPeer(${inv.id})" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Reject</button>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('invitesList').innerHTML = invitesHtml;
+        }
+
+        function acceptPeer(id) {
+            const peer = appData.peers.find(p => p.id === id);
+            if (peer) {
+                peer.status = 'accepted';
+                localStorage.setItem('appData', JSON.stringify(appData));
+                displayPeers();
+                alert(`✅ Connected with ${peer.username}!`);
+            }
+        }
+
+        function rejectPeer(id) {
+            appData.peers = appData.peers.filter(p => p.id !== id);
+            localStorage.setItem('appData', JSON.stringify(appData));
+            displayPeers();
+        }
+
+        // Initialize
+        if (currentUser) {
+            switchPage('dashboardPage');
+            loadUserProfile();
+        }
+    </script>
+</body>
+</html>
